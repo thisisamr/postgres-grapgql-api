@@ -1,0 +1,468 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model RequestPrices {
+  Id           Int       @id(map: "PK_RequestPrices") @default(autoincrement())
+  UnitType     Int
+  AreaSizeFrom Float
+  AreaSizeUpTo Float
+  Price        Float
+  AddedDate    DateTime  @db.Timestamptz(6)
+  ModifiedDate DateTime? @db.Timestamptz(6)
+  Createdby    String?
+  UpdatedBy    String?
+}
+
+model addresses {
+  id               Int       @id(map: "PK_Addresses")
+  floor_number     Int?
+  apartment_number Int?
+  streetname       String?   @db.VarChar(200)
+  unique_mark      String?   @db.VarChar(200)
+  description      String?   @db.VarChar(200)
+  districtid       Int?
+  requestid        Int?
+  addeddate        DateTime? @db.Timestamptz(6)
+  modifieddate     DateTime? @db.Timestamptz(6)
+  createdby        String?
+  updatedby        String?
+  regionid         Int?
+  sync_status      Int?
+  property_number  String?   @db.VarChar
+}
+
+model aspnetusers {
+  id                   String    @id(map: "PK_AspNetUsers")
+  arabicfullname       String    @db.VarChar(200)
+  addeddate            DateTime  @db.Timestamptz(6)
+  modifieddate         DateTime? @db.Timestamptz(6)
+  makerid              String?
+  dateofbirth          DateTime? @db.Timestamptz(6)
+  firstlogin           Boolean?
+  addressid            Int?
+  username             String?   @db.VarChar(256)
+  normalizedusername   String?   @db.VarChar(256)
+  email                String?   @db.VarChar(256)
+  normalizedemail      String?   @db.VarChar(256)
+  emailconfirmed       Boolean?
+  passwordhash         String?
+  securitystamp        String?
+  concurrencystamp     String?
+  phonenumber          String?
+  phonenumberconfirmed Boolean?
+  twofactorenabled     Boolean?
+  lockoutendl          DateTime? @db.Timestamptz(6)
+  lockoutenabled       Boolean?
+  accessfailedcount    Int?
+  sync_status          Int?
+}
+
+model assignements {
+  id                      Int       @id @default(autoincrement())
+  request_id              Int?
+  survey_team_id          Int?
+  assignment_date_time    DateTime? @db.Timestamptz(6)
+  due_date                DateTime? @db.Date
+  collected               Int?
+  requestnumber           String    @unique(map: "ass_id")
+  session                 String?   @db.VarChar
+  done                    Int?
+  assigned                Int?
+  confirmed               Int?
+  contact_method          Int?
+  company_id              Int?
+  callcenter_confirm_time DateTime? @db.Timestamptz(6)
+  log_user                String?
+  log_time                DateTime? @db.Timestamptz(6)
+  log_proc                String?
+}
+
+model callcenter {
+  id          Int       @id(map: "PK_CallCenter") @default(autoincrement())
+  request_id  Int
+  notes       String?
+  change_date DateTime? @db.Date
+}
+
+model callcenter_comments {
+  id            Int       @id @default(autoincrement())
+  comment       String?
+  comment_time  DateTime? @db.Timestamp(6)
+  requestnumber String?   @db.VarChar
+}
+
+model companies {
+  id                Int     @id(map: "PK_Companies") @default(autoincrement())
+  companyname       String
+  phonenumber       String
+  email             String
+  username_id       Int?
+  fax               String?
+  bank_acc          String?
+  commercial_record String?
+  pm_name           String?
+  user_id           String? @db.Uuid
+  address           String?
+}
+
+model company_gov {
+  id         Int  @id @default(autoincrement())
+  gov_id     Int?
+  company_id Int?
+}
+
+model districts {
+  id           Int     @id(map: "PK_Districts")
+  englishname  String? @db.VarChar(200)
+  arabicname   String? @db.VarChar(200)
+  regionid     Int?
+  createdby    String?
+  updatedby    String?
+  addeddate    String? @db.Char(255)
+  modifieddate String? @db.Char(255)
+}
+
+model employee {
+  name         String? @db.VarChar
+  phone        String? @db.VarChar
+  email        String? @db.VarChar
+  adress       String? @db.VarChar
+  id           String? @db.VarChar
+  company_name String? @db.VarChar
+  companyid    Int?
+  teamid       Int?
+  photo        String?
+  phone2       String? @db.VarChar
+  code         String  @id(map: "pk_EMployeeeeee")
+}
+
+model field_data {
+  field_data_id            String                   @id @db.VarChar
+  request_id               Int?
+  geom                     Unsupported("geometry")?
+  survey_date              String?                  @db.VarChar
+  apartment_no             Int?
+  level_no                 Int?
+  north_border_name        String?                  @db.VarChar
+  south_border_name        String?                  @db.VarChar
+  east_border_name         String?                  @db.VarChar
+  west_border_name         String?                  @db.VarChar
+  attach_name              String?                  @db.VarChar
+  north_border_length      Decimal?                 @db.Decimal
+  south_border_length      Decimal?                 @db.Decimal
+  east_border_length       Decimal?                 @db.Decimal
+  west_border_length       Decimal?                 @db.Decimal
+  description              String?
+  usage                    String?
+  geom_build               Unsupported("geometry")?
+  attach_selim_manwar_name String?                  @db.VarChar
+  attach_land_name         String?                  @db.VarChar
+  attach_ma7dar_name       String?                  @db.VarChar
+  total_area_building      Decimal?                 @db.Decimal
+  area_buildings           Decimal?                 @db.Decimal
+  area_mnawer              Decimal?                 @db.Decimal
+  area_ber_elselm          Decimal?                 @db.Decimal
+  area_apartment           Decimal?                 @db.Decimal
+  area_land                Decimal?                 @db.Decimal
+  ket3a_no                 String?                  @db.VarChar
+  hod_no                   String?                  @db.VarChar
+  requestnumber            String?                  @db.VarChar
+}
+
+model field_data_v2 {
+  geom                          Unsupported("geometry")?
+  survey_date                   String?                  @db.VarChar
+  apartment_no                  Int?
+  level_no                      Int?
+  north_border_name             String?                  @db.VarChar
+  south_border_name             String?                  @db.VarChar
+  east_border_name              String?                  @db.VarChar
+  west_border_name              String?                  @db.VarChar
+  attach_name                   String?                  @db.VarChar
+  north_border_length           Decimal?                 @db.Decimal
+  south_border_length           Decimal?                 @db.Decimal
+  east_border_length            Decimal?                 @db.Decimal
+  west_border_length            Decimal?                 @db.Decimal
+  description                   String?
+  usage                         String?
+  geom_build                    Unsupported("geometry")?
+  attach_selim_manwar_name      String?                  @db.VarChar
+  attach_land_name              String?                  @db.VarChar
+  attach_ma7dar_name            String?                  @db.VarChar
+  total_area_building           Decimal?                 @db.Decimal
+  area_buildings                Decimal?                 @db.Decimal
+  area_mnawer                   Decimal?                 @db.Decimal
+  area_ber_elselm               Decimal?                 @db.Decimal
+  area_apartment                Decimal?                 @db.Decimal
+  area_land                     Decimal?                 @db.Decimal
+  ket3a_no                      String?                  @db.VarChar
+  hod_no                        String?                  @db.VarChar
+  requestnumber                 String                   @id @db.VarChar
+  field_data_id                 Int                      @unique(map: "field_data_id") @default(autoincrement())
+  survey_time                   DateTime?                @db.Timestamptz(6)
+  elevator                      Int?
+  north_border_name_apartment   String?                  @db.VarChar
+  south_border_name_apartment   String?                  @db.VarChar
+  east_border_name_apartment    String?                  @db.VarChar
+  west_border_name_apartment    String?                  @db.VarChar
+  north_border_length_apartment Decimal?                 @db.Decimal
+  south_border_length_apartment Decimal?                 @db.Decimal
+  east_border_length_apartment  Decimal?                 @db.Decimal
+  west_border_length_apartment  Decimal?                 @db.Decimal
+}
+
+model field_data_v3 {
+  field_data_id            Int                      @id @default(autoincrement())
+  request_id               Int?
+  geom                     Unsupported("geometry")?
+  survey_date              String?                  @db.VarChar
+  apartment_no             Int?
+  level_no                 Int?
+  north_border_name        String?                  @db.VarChar
+  south_border_name        String?                  @db.VarChar
+  east_border_name         String?                  @db.VarChar
+  west_border_name         String?                  @db.VarChar
+  attach_name              String?                  @db.VarChar
+  north_border_length      Decimal?                 @db.Decimal
+  south_border_length      Decimal?                 @db.Decimal
+  east_border_length       Decimal?                 @db.Decimal
+  west_border_length       Decimal?                 @db.Decimal
+  description              String?
+  usage                    String?
+  geom_build               Unsupported("geometry")?
+  attach_selim_manwar_name String?                  @db.VarChar
+  attach_land_name         String?                  @db.VarChar
+  attach_ma7dar_name       String?                  @db.VarChar
+  total_area_building      Decimal?                 @db.Decimal
+  area_buildings           Decimal?                 @db.Decimal
+  area_mnawer              Decimal?                 @db.Decimal
+  area_ber_elselm          Decimal?                 @db.Decimal
+  area_apartment           Decimal?                 @db.Decimal
+  area_land                Decimal?                 @db.Decimal
+  ket3a_no                 String?                  @db.VarChar
+  hod_no                   String?                  @db.VarChar
+  requestnumber            String?                  @db.VarChar
+}
+
+model gov_3857 {
+  id         Int                      @id @default(autoincrement())
+  geom       Unsupported("geometry")?
+  objectid   BigInt?
+  gov_code   String?                  @db.VarChar(254)
+  gov_name_e String?                  @db.VarChar(100)
+  gov        String?                  @db.VarChar(254)
+}
+
+model governorates {
+  id           Int     @id(map: "PK_Governorates")
+  englishname  String? @db.VarChar(200)
+  arabicname   String? @db.VarChar(200)
+  createdby    String?
+  updatedby    String?
+  addeddate    String? @db.Char(255)
+  modifieddate String? @db.Char(255)
+  latitude     String? @db.Char(255)
+  longitude    String? @db.Char(255)
+}
+
+model office {
+  id             Int     @id @default(autoincrement())
+  longitude      String? @db.VarChar
+  latitude       String? @db.VarChar
+  arabicaddress  String? @db.VarChar
+  addeddate      String? @db.VarChar
+  modifieddate   String? @db.VarChar
+  createdby      String? @db.VarChar
+  updatedBy      String? @db.VarChar
+  englishaddress String? @db.VarChar
+  regionid       String? @db.VarChar
+  gpslocation    String? @db.VarChar
+}
+
+model orderstatus {
+  orderstatusreference Int    @id
+  orderstatusname      String @db.VarChar
+}
+
+model paymenttrasnsactionrequestpricedifference {
+  paymenttrasnsactionsid    Int?
+  requestpricedifferencesid Int?
+  sync_status               Int?
+  id                        Int  @id(map: "PK_paymenttransactionrequestpricediff") @default(autoincrement())
+}
+
+model paymenttrasnsactions {
+  id                Int     @id
+  merchantrefnum    String? @db.Char(100)
+  price             Float?
+  paymentamount     Float?
+  fawryfees         Float?
+  paymentmethod     Int?
+  orderstatus       Int?
+  referencenumber   String? @db.Char(255)
+  paymenttime       String? @db.Char(200)
+  statuscode        String? @db.Char(200)
+  statusdescription String? @db.Char(200)
+  requestid         Int?
+  addeddate         String? @db.Char(200)
+  modifieddate      String? @db.Char(200)
+  createdby         String? @db.Char(200)
+  updatedby         String? @db.Char(200)
+  transactiontype   Int?
+  refundedamount    Float?
+  sync_status       Int?
+  userid            String? @db.VarChar
+}
+
+model paymenttrasnsactionshippingorder {
+  paymenttrasnsactionsid Int?
+  shippingordersid       Int?
+  sync_status            Int?
+  id                     Int  @id(map: "PK_paymenttransactionshippingorder") @default(autoincrement())
+}
+
+model regions {
+  id            Int     @id(map: "pk_regions")
+  englishname   String? @db.VarChar(200)
+  arabicname    String? @db.VarChar(200)
+  governorateid Int?
+  createdby     String?
+  updatedby     String?
+  addeddate     String? @db.Char(255)
+  modifieddate  String? @db.Char(255)
+  surveyteamid  Int?    @default(0)
+}
+
+model requests {
+  unittype         Int?
+  requeststatus    Int?
+  location         String?
+  area             Float?
+  price            Float?
+  receiptimagepath String?
+  requestnumber    String?
+  userid           String?
+  addeddate        DateTime? @db.Timestamptz(6)
+  modifieddate     DateTime? @db.Timestamptz(6)
+  createdby        String?
+  updatedby        String?
+  callcenter_note  String?
+  currentstatus    Int?
+  payment_confirm  Int?
+  callconfirm      Int?
+  callcenter       Int?
+  test             String?   @db.VarChar
+  done             Int?
+  assigned         Int?
+  confirmed        Int?
+  notes            String?
+  sync_status      Int?
+  id               Int       @id(map: "requests2_pkey")
+}
+
+model requeststatus {
+  id     Int     @id @default(autoincrement())
+  status String? @db.VarChar
+}
+
+model shippingorders {
+  id                    Int       @id
+  requestid             Int?
+  shippingtype          Int?
+  shippingprice         Float?
+  officeid              Int?
+  longitude             Float?
+  latitude              Float?
+  districtid            Int?
+  status                Int?
+  addeddate             DateTime? @db.Timestamptz(6)
+  modifieddate          DateTime? @db.Timestamptz(6)
+  createdby             String?   @db.VarChar
+  updatedby             String?   @db.VarChar
+  numberofcopies        Int?
+  apartmentnumber       Int?
+  description           String?
+  floornumber           Int?
+  propertynumber        Int?
+  regionid              Int?
+  streetname            String?   @db.VarChar
+  uniquemark            String?   @db.VarChar
+  extracopiesprice      Float?
+  orderstatus           Int?
+  sync_status           Int?
+  shippingtype_name     String?   @db.VarChar
+  shippingcenter_adress String?   @db.VarChar
+}
+
+model shippingtype {
+  id           Int     @id
+  shippingtype String? @db.VarChar
+}
+
+model spatial_ref_sys {
+  srid      Int     @id
+  auth_name String? @db.VarChar(256)
+  auth_srid Int?
+  srtext    String? @db.VarChar(2048)
+  proj4text String? @db.VarChar(2048)
+}
+
+model surveyteam_comments {
+  id            Int       @id @default(autoincrement())
+  comment       String?
+  comment_time  DateTime? @db.Timestamp(6)
+  requestnumber String?   @db.VarChar
+}
+
+model surveyteam_region {
+  id        Int  @id @default(autoincrement())
+  team_id   Int?
+  region_id Int?
+  gov_id    Int?
+}
+
+model surveyteams {
+  id          Int     @id(map: "PK_SurveyTeams") @default(autoincrement())
+  companyid   Int?
+  regionid    Int?    @default(0)
+  gov_id      Int?
+  mappuser_id String? @db.VarChar
+}
+
+model unittype_value {
+  id       Int     @id(map: "unittype_lookup_pkey")
+  unitname String? @db.VarChar
+}
+
+model useraddresses {
+  id            Int       @id
+  description   String?   @db.VarChar(200)
+  districtid    Int?
+  userprofileid Int?
+  addeddate     DateTime? @db.Timestamptz(6)
+  modifieddate  DateTime? @db.Timestamptz(6)
+  createdby     String?
+  updatedby     String?
+  regionid      Int?
+  sync_status   Int?
+}
+
+model userprofiles {
+  id              Int       @id
+  telephonenumber String?   @db.VarChar
+  userid          String?
+  addeddate       DateTime? @db.Timestamp(6)
+  modifieddate    DateTime? @db.Timestamp(6)
+  createdby       String?   @db.VarChar
+  updatedby       String?   @db.VarChar
+  haswhatsapp     String?   @db.Bit(1)
+  phonenumbertype Int?
+  description     String?   @db.VarChar
+  sync_status     Int?
+}
