@@ -23,6 +23,9 @@ export const typeDefs = gql`
     aspnetusers
     requests
     addresses
+    userprofiles
+    shippingorders
+    paymenttrasnsactions
   }
   type aspnetuser {
     Id: String
