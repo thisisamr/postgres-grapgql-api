@@ -37,6 +37,7 @@ export type AddressInput = {
 };
 
 export enum DbTables {
+  Addresses = 'addresses',
   Aspnetusers = 'aspnetusers',
   Requests = 'requests'
 }
@@ -58,7 +59,10 @@ export type Mutation = {
   SyncRequests: Scalars['String'];
   getRequestesByDate?: Maybe<Array<Maybe<Request>>>;
   initAddresses: Scalars['String'];
+  initPaymentTransactions: Scalars['String'];
   initRequests: Scalars['String'];
+  initShippingOrders: Scalars['String'];
+  initUserProfiles: Scalars['String'];
   initUsers: Scalars['String'];
   unsafe: Scalars['String'];
 };
@@ -79,13 +83,50 @@ export type MutationInitAddressesArgs = {
 };
 
 
+export type MutationInitPaymentTransactionsArgs = {
+  paymentTransactions?: InputMaybe<Array<PaymentTransactionInput>>;
+};
+
+
 export type MutationInitRequestsArgs = {
   requests?: InputMaybe<Array<ReqInput>>;
 };
 
 
+export type MutationInitShippingOrdersArgs = {
+  ShippingOrders?: InputMaybe<Array<ShippingOrderInput>>;
+};
+
+
+export type MutationInitUserProfilesArgs = {
+  userProfiles?: InputMaybe<Array<UserProfileInput>>;
+};
+
+
 export type MutationInitUsersArgs = {
   users?: InputMaybe<Array<UserInput>>;
+};
+
+export type PaymentTransactionInput = {
+  addeddate?: InputMaybe<Scalars['Date']>;
+  createdby?: InputMaybe<Scalars['String']>;
+  fawryfees?: InputMaybe<Scalars['Float']>;
+  id?: InputMaybe<Scalars['Int']>;
+  merchantrefnum?: InputMaybe<Scalars['String']>;
+  modifieddate?: InputMaybe<Scalars['Date']>;
+  orderstatus?: InputMaybe<Scalars['Int']>;
+  paymentamount?: InputMaybe<Scalars['Float']>;
+  paymentmethod?: InputMaybe<Scalars['Int']>;
+  price?: InputMaybe<Scalars['Float']>;
+  referencenumber?: InputMaybe<Scalars['String']>;
+  refundedamount?: InputMaybe<Scalars['Float']>;
+  requestid?: InputMaybe<Scalars['Int']>;
+  statuscode?: InputMaybe<Scalars['String']>;
+  statusdescription?: InputMaybe<Scalars['String']>;
+  sync_status?: InputMaybe<Scalars['Int']>;
+  transactiontype?: InputMaybe<Scalars['Int']>;
+  updatedby?: InputMaybe<Scalars['String']>;
+  userid?: InputMaybe<Scalars['String']>;
 };
 
 export type Query = {
@@ -147,6 +188,34 @@ export type Request = {
   userid?: Maybe<Scalars['String']>;
 };
 
+export type ShippingOrderInput = {
+  addeddate?: InputMaybe<Scalars['Date']>;
+  apartmentnumber?: InputMaybe<Scalars['Int']>;
+  createdby?: InputMaybe<Scalars['String']>;
+  description?: InputMaybe<Scalars['String']>;
+  districtid?: InputMaybe<Scalars['Int']>;
+  extracopiesprice?: InputMaybe<Scalars['Float']>;
+  floornumber?: InputMaybe<Scalars['Int']>;
+  id?: InputMaybe<Scalars['Int']>;
+  latitude?: InputMaybe<Scalars['Float']>;
+  longitude?: InputMaybe<Scalars['Float']>;
+  modifieddate?: InputMaybe<Scalars['Date']>;
+  numberofcopies?: InputMaybe<Scalars['Int']>;
+  officeid?: InputMaybe<Scalars['Int']>;
+  orderstatus?: InputMaybe<Scalars['Int']>;
+  propertynumber?: InputMaybe<Scalars['Int']>;
+  regionid?: InputMaybe<Scalars['Int']>;
+  requestid?: InputMaybe<Scalars['Int']>;
+  shippingcenter_adress?: InputMaybe<Scalars['String']>;
+  shippingprice?: InputMaybe<Scalars['Float']>;
+  shippingtype?: InputMaybe<Scalars['Int']>;
+  shippingtype_name?: InputMaybe<Scalars['String']>;
+  streetname?: InputMaybe<Scalars['String']>;
+  sync_status?: InputMaybe<Scalars['Int']>;
+  uniquemark?: InputMaybe<Scalars['String']>;
+  updatedby?: InputMaybe<Scalars['String']>;
+};
+
 export type UserInput = {
   accessfailedcount?: InputMaybe<Scalars['Int']>;
   addeddate: Scalars['Date'];
@@ -171,6 +240,20 @@ export type UserInput = {
   sync_status?: InputMaybe<Scalars['Int']>;
   twofactorenabled?: InputMaybe<Scalars['Boolean']>;
   username?: InputMaybe<Scalars['String']>;
+};
+
+export type UserProfileInput = {
+  addeddate?: InputMaybe<Scalars['Date']>;
+  createdby?: InputMaybe<Scalars['String']>;
+  description?: InputMaybe<Scalars['String']>;
+  haswhatsapp?: InputMaybe<Scalars['Boolean']>;
+  id?: InputMaybe<Scalars['Int']>;
+  modifieddate?: InputMaybe<Scalars['Date']>;
+  phonenumbertype?: InputMaybe<Scalars['Int']>;
+  sync_status?: InputMaybe<Scalars['Int']>;
+  telephonenumber?: InputMaybe<Scalars['String']>;
+  updatedby?: InputMaybe<Scalars['String']>;
+  userid?: InputMaybe<Scalars['String']>;
 };
 
 export type Aspnetuser = {
@@ -284,11 +367,14 @@ export type ResolversTypes = {
   LatestRequestInfo: ResolverTypeWrapper<LatestRequestInfo>;
   LatestUserInfo: ResolverTypeWrapper<LatestUserInfo>;
   Mutation: ResolverTypeWrapper<{}>;
+  PaymentTransactionInput: PaymentTransactionInput;
   Query: ResolverTypeWrapper<{}>;
   ReqInput: ReqInput;
   Request: ResolverTypeWrapper<Request>;
+  ShippingOrderInput: ShippingOrderInput;
   String: ResolverTypeWrapper<Scalars['String']>;
   UserInput: UserInput;
+  UserProfileInput: UserProfileInput;
   aspnetuser: ResolverTypeWrapper<Aspnetuser>;
   stat: ResolverTypeWrapper<Stat>;
 };
@@ -303,11 +389,14 @@ export type ResolversParentTypes = {
   LatestRequestInfo: LatestRequestInfo;
   LatestUserInfo: LatestUserInfo;
   Mutation: {};
+  PaymentTransactionInput: PaymentTransactionInput;
   Query: {};
   ReqInput: ReqInput;
   Request: Request;
+  ShippingOrderInput: ShippingOrderInput;
   String: Scalars['String'];
   UserInput: UserInput;
+  UserProfileInput: UserProfileInput;
   aspnetuser: Aspnetuser;
   stat: Stat;
 };
@@ -351,7 +440,10 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   SyncRequests?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationSyncRequestsArgs, never>>;
   getRequestesByDate?: Resolver<Maybe<Array<Maybe<ResolversTypes['Request']>>>, ParentType, ContextType, RequireFields<MutationGetRequestesByDateArgs, never>>;
   initAddresses?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationInitAddressesArgs, never>>;
+  initPaymentTransactions?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationInitPaymentTransactionsArgs, never>>;
   initRequests?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationInitRequestsArgs, never>>;
+  initShippingOrders?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationInitShippingOrdersArgs, never>>;
+  initUserProfiles?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationInitUserProfilesArgs, never>>;
   initUsers?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationInitUsersArgs, never>>;
   unsafe?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
 };

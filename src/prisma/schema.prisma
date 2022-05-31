@@ -23,9 +23,9 @@ model addresses {
   id               Int       @id(map: "PK_Addresses")
   floor_number     Int?
   apartment_number Int?
-  streetname       String?   @db.VarChar(200)
-  unique_mark      String?   @db.VarChar(200)
-  description      String?   @db.VarChar(200)
+  streetname       String?
+  unique_mark      String?
+  description      String?
   districtid       Int?
   requestid        Int?
   addeddate        DateTime? @db.Timestamptz(6)
@@ -61,6 +61,10 @@ model aspnetusers {
   lockoutenabled       Boolean?
   accessfailedcount    Int?
   sync_status          Int?
+
+  @@index([normalizedemail], map: "EmailIndex")
+  @@index([addressid], map: "IX_AspNetUsers_AddressId")
+  @@index([makerid], map: "IX_AspNetUsers_MakerId")
 }
 
 model assignements {
@@ -81,6 +85,7 @@ model assignements {
   log_user                String?
   log_time                DateTime? @db.Timestamptz(6)
   log_proc                String?
+  survey_review           Int?
 }
 
 model callcenter {
@@ -128,6 +133,7 @@ model districts {
   modifieddate String? @db.Char(255)
 }
 
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
 model employee {
   name         String? @db.VarChar
   phone        String? @db.VarChar
@@ -139,7 +145,9 @@ model employee {
   teamid       Int?
   photo        String?
   phone2       String? @db.VarChar
-  code         String  @id(map: "pk_EMployeeeeee")
+  code         String?
+
+  @@ignore
 }
 
 model field_data {
@@ -290,11 +298,13 @@ model orderstatus {
   orderstatusname      String @db.VarChar
 }
 
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
 model paymenttrasnsactionrequestpricedifference {
   paymenttrasnsactionsid    Int?
   requestpricedifferencesid Int?
   sync_status               Int?
-  id                        Int  @id(map: "PK_paymenttransactionrequestpricediff") @default(autoincrement())
+
+  @@ignore
 }
 
 model paymenttrasnsactions {
@@ -320,15 +330,18 @@ model paymenttrasnsactions {
   userid            String? @db.VarChar
 }
 
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
 model paymenttrasnsactionshippingorder {
   paymenttrasnsactionsid Int?
   shippingordersid       Int?
   sync_status            Int?
-  id                     Int  @id(map: "PK_paymenttransactionshippingorder") @default(autoincrement())
+
+  @@ignore
 }
 
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
 model regions {
-  id            Int     @id(map: "pk_regions")
+  id            Int
   englishname   String? @db.VarChar(200)
   arabicname    String? @db.VarChar(200)
   governorateid Int?
@@ -337,6 +350,8 @@ model regions {
   addeddate     String? @db.Char(255)
   modifieddate  String? @db.Char(255)
   surveyteamid  Int?    @default(0)
+
+  @@ignore
 }
 
 model requests {
@@ -461,8 +476,29 @@ model userprofiles {
   modifieddate    DateTime? @db.Timestamp(6)
   createdby       String?   @db.VarChar
   updatedby       String?   @db.VarChar
-  haswhatsapp     String?   @db.Bit(1)
   phonenumbertype Int?
   description     String?   @db.VarChar
   sync_status     Int?
+  haswhatsapp     Boolean?
+}
+
+model EFMigrationsHistory {
+  MigrationId    String @id(map: "PK___EFMigrationsHistory") @db.VarChar(150)
+  ProductVersion String @db.VarChar(32)
+
+  @@map("__EFMigrationsHistory")
+}
+
+model aspnetroles {
+  Id               String  @id(map: "PK_AspNetRoles")
+  Name             String? @db.VarChar(256)
+  NormalizedName   String? @db.VarChar(256)
+  ConcurrencyStamp String?
+}
+
+model survey_review_comments {
+  id            Int       @id @default(autoincrement())
+  comment       String?
+  comment_time  DateTime? @db.Timestamp(6)
+  requestnumber String?   @db.VarChar
 }

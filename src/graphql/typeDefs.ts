@@ -147,6 +147,67 @@ export const typeDefs = gql`
     tablename: String
     count: Int
   }
+  input UserProfileInput {
+    id: Int
+    telephonenumber: String
+    userid: String
+    addeddate: Date
+    modifieddate: Date
+    createdby: String
+    updatedby: String
+    haswhatsapp: Boolean
+    phonenumbertype: Int
+    description: String
+    sync_status: Int
+  }
+  input PaymentTransactionInput {
+    id: Int
+    merchantrefnum: String
+    price: Float
+    paymentamount: Float
+    fawryfees: Float
+    paymentmethod: Int
+    orderstatus: Int
+    referencenumber: String
+    statuscode: String
+    statusdescription: String
+    requestid: Int
+    addeddate: Date
+    modifieddate: Date
+    createdby: String
+    updatedby: String
+    transactiontype: Int
+    refundedamount: Float
+    sync_status: Int
+    userid: String
+  }
+  input ShippingOrderInput {
+    id: Int
+    requestid: Int
+    shippingtype: Int
+    shippingprice: Float
+    officeid: Int
+    longitude: Float
+    latitude: Float
+    districtid: Int
+    addeddate: Date
+    modifieddate: Date
+    createdby: String
+    updatedby: String
+    numberofcopies: Int
+    apartmentnumber: Int
+    description: String
+    floornumber: Int
+    propertynumber: Int
+    regionid: Int
+    streetname: String
+    uniquemark: String
+    extracopiesprice: Float
+    orderstatus: Int
+    sync_status: Int
+    shippingtype_name: String
+    shippingcenter_adress: String
+  }
   type Query {
     getRequests: String!
     TableIsEmpty(tablename: DbTables!): Boolean!
@@ -163,5 +224,10 @@ export const typeDefs = gql`
     initUsers(users: [UserInput!]): String!
     SyncRequests(requests: ReqInput): String!
     initAddresses(addresses: [AddressInput!]): String!
+    initUserProfiles(userProfiles: [UserProfileInput!]): String!
+    initPaymentTransactions(
+      paymentTransactions: [PaymentTransactionInput!]
+    ): String!
+    initShippingOrders(ShippingOrders: [ShippingOrderInput!]): String!
   }
 `;
