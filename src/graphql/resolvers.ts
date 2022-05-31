@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { Prisma, PrismaClient } from "@prisma/client";
 import {
   AuthenticationError,
   Context,
@@ -216,14 +216,30 @@ export const resolvers: Resolvers<Icontext> = {
       const isempty = (await prisma[tb].count()) == 0;
       return isempty;
     },
-    GetNumberOfRecords: async (_, { tablename }, { prisma }) => {
-      const tb = tablename;
-      const count = await prisma[tb].count();
-      return count;
+    GetNumberOfRecords: async (_, __, { prisma }) => {
+      // const tablenames = await prisma.$queryRaw<
+      //   Array<{ tablename: string }>
+      // >`SELECT tablename FROM pg_tables WHERE schemaname='public' and tablename in ()`;
+      const tablenames = [
+        "addresses",
+        "aspnetusers",
+        "userprofiles",
+        "requests",
+      ];
+      const stats = [];
+      const s = tablenames.map(async (tbl) => {
+        try {
+          const count = await prisma[tbl].count();
+          return { tablename: tbl, count };
+        } catch (error) {
+          console.log({ error });
+        }
+      });
+      return s;
     },
     getlatestUser: async (_, __, { prisma }) => {
       const result =
-        await prisma.$queryRaw`select addeddate,id from (select aspnetusers.addeddate ,id from public.aspnetusers order by addeddate desc) as foo limit 1`;
+        await prisma.$queryRaw`select addeddate::timestamp,id from (select aspnetusers.addeddate ,id from public.aspnetusers order by addeddate desc) as foo limit 1`;
       return result;
     },
     getlatestModifiedUser: async (_, __, { prisma }) => {
@@ -234,7 +250,7 @@ export const resolvers: Resolvers<Icontext> = {
     getLatestRequest: async (_, __, { prisma }) => {
       const result =
         //await prisma.$queryRaw`select left(to_char((select addeddate from (select requests.addeddate from public.requests order by addeddate desc) as foo limit 1)::timestamp(1), 'YYYY-MM-DD HH:MI:SS.MS'), 25)|| ((select addeddate from (select requests.addeddate from public.requests order by addeddate desc) as foo limit 1)::timestamp(1), 'FM AM')::VARCHAR;`;
-        await prisma.$queryRaw`select addeddate,id from (select requests.addeddate,id from public.requests order by addeddate desc) as foo limit 1`;
+        await prisma.$queryRaw`select addeddate::timestamp,id from (select requests.addeddate,id from public.requests order by addeddate desc) as foo limit 1`;
 
       return result;
     },
@@ -246,25 +262,48 @@ export const resolvers: Resolvers<Icontext> = {
   },
   Mutation: {
     initRequests: async (_, { requests }, { prisma }) => {
-      if (requests) {
+      if (requests?.length) {
         await prisma.requests.createMany({
           data: [...requests],
           // Skip 'Bobo'
         });
+        return "✅ done adding Requests";
+      } else {
+        return "recieved no request input";
       }
-      return "✅ done adding Requests";
     },
     initUsers: async (_, { users }, { prisma }) => {
-      if (users) {
+      if (users?.length) {
         await prisma.aspnetusers.createMany({
           data: [...users],
         });
       }
       return "✔️ done adding Users";
     },
-    SyncRequests: async (_, __, { prisma }) => {
+    initAddresses: async (_, { addresses }, { prisma }) => {
+      if (addresses?.length) {
+        await prisma.addresses.createMany({
+          data: [...addresses],
+        });
+      }
+      return "🏠 done adding Addresses";
+    },
+    unsafe: async (_, __, { prisma }) => {
+      const tbls = ["addresses", "aspnetusers", "userprofiles", "requests"];
+      const tablenames = await prisma.$queryRaw<
+        Array<{ tablename: string }>
+      >`SELECT tablename FROM pg_tables WHERE schemaname='public' and tablename in ('addresses','aspnetusers','userprofiles','requests')`;
+      for (const { tablename } of tablenames) {
+        try {
+          await prisma.$executeRawUnsafe(
+            `TRUNCATE TABLE "public"."${tablename}" CASCADE;`
+          );
+          console.log(`table ${tablename} truncated 👌`);
+        } catch (error) {
+          console.log({ error });
+        }
+      }
       return "ok";
-      //prisma.requests.upsert()
     },
   },
 };

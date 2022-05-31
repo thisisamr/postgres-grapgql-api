@@ -16,6 +16,26 @@ export type Scalars = {
   Date: any;
 };
 
+export type AddressInput = {
+  addeddate?: InputMaybe<Scalars['Date']>;
+  apartment_number?: InputMaybe<Scalars['Int']>;
+  createdby?: InputMaybe<Scalars['String']>;
+  description?: InputMaybe<Scalars['String']>;
+  districtId?: InputMaybe<Scalars['Int']>;
+  districtid?: InputMaybe<Scalars['Int']>;
+  floor_number?: InputMaybe<Scalars['Int']>;
+  id: Scalars['Int'];
+  modifieddate?: InputMaybe<Scalars['Date']>;
+  property_number?: InputMaybe<Scalars['String']>;
+  regionid?: InputMaybe<Scalars['Int']>;
+  requestid?: InputMaybe<Scalars['Int']>;
+  streetname?: InputMaybe<Scalars['String']>;
+  sync_status?: InputMaybe<Scalars['Int']>;
+  unique_mark?: InputMaybe<Scalars['String']>;
+  updatedby?: InputMaybe<Scalars['String']>;
+  userprofileid?: InputMaybe<Scalars['Int']>;
+};
+
 export enum DbTables {
   Aspnetusers = 'aspnetusers',
   Requests = 'requests'
@@ -37,8 +57,10 @@ export type Mutation = {
   __typename?: 'Mutation';
   SyncRequests: Scalars['String'];
   getRequestesByDate?: Maybe<Array<Maybe<Request>>>;
+  initAddresses: Scalars['String'];
   initRequests: Scalars['String'];
   initUsers: Scalars['String'];
+  unsafe: Scalars['String'];
 };
 
 
@@ -49,6 +71,11 @@ export type MutationSyncRequestsArgs = {
 
 export type MutationGetRequestesByDateArgs = {
   date?: InputMaybe<Scalars['Date']>;
+};
+
+
+export type MutationInitAddressesArgs = {
+  addresses?: InputMaybe<Array<AddressInput>>;
 };
 
 
@@ -63,18 +90,13 @@ export type MutationInitUsersArgs = {
 
 export type Query = {
   __typename?: 'Query';
-  GetNumberOfRecords: Scalars['Int'];
+  GetNumberOfRecords?: Maybe<Array<Maybe<Stat>>>;
   TableIsEmpty: Scalars['Boolean'];
   getLatestModifiedRequest?: Maybe<Scalars['Date']>;
   getLatestRequest?: Maybe<Array<Maybe<LatestRequestInfo>>>;
   getRequests: Scalars['String'];
   getlatestModifiedUser?: Maybe<Scalars['Date']>;
   getlatestUser?: Maybe<Array<Maybe<LatestUserInfo>>>;
-};
-
-
-export type QueryGetNumberOfRecordsArgs = {
-  tablename: DbTables;
 };
 
 
@@ -178,6 +200,12 @@ export type Aspnetuser = {
   username?: Maybe<Scalars['String']>;
 };
 
+export type Stat = {
+  __typename?: 'stat';
+  count?: Maybe<Scalars['Int']>;
+  tablename?: Maybe<Scalars['String']>;
+};
+
 
 
 export type ResolverTypeWrapper<T> = Promise<T> | T;
@@ -247,6 +275,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
+  AddressInput: AddressInput;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
   Date: ResolverTypeWrapper<Scalars['Date']>;
   DbTables: DbTables;
@@ -261,10 +290,12 @@ export type ResolversTypes = {
   String: ResolverTypeWrapper<Scalars['String']>;
   UserInput: UserInput;
   aspnetuser: ResolverTypeWrapper<Aspnetuser>;
+  stat: ResolverTypeWrapper<Stat>;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
+  AddressInput: AddressInput;
   Boolean: Scalars['Boolean'];
   Date: Scalars['Date'];
   Float: Scalars['Float'];
@@ -278,6 +309,7 @@ export type ResolversParentTypes = {
   String: Scalars['String'];
   UserInput: UserInput;
   aspnetuser: Aspnetuser;
+  stat: Stat;
 };
 
 export type ConstraintDirectiveArgs = {
@@ -318,12 +350,14 @@ export type LatestUserInfoResolvers<ContextType = any, ParentType extends Resolv
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   SyncRequests?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationSyncRequestsArgs, never>>;
   getRequestesByDate?: Resolver<Maybe<Array<Maybe<ResolversTypes['Request']>>>, ParentType, ContextType, RequireFields<MutationGetRequestesByDateArgs, never>>;
+  initAddresses?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationInitAddressesArgs, never>>;
   initRequests?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationInitRequestsArgs, never>>;
   initUsers?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationInitUsersArgs, never>>;
+  unsafe?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
 };
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
-  GetNumberOfRecords?: Resolver<ResolversTypes['Int'], ParentType, ContextType, RequireFields<QueryGetNumberOfRecordsArgs, 'tablename'>>;
+  GetNumberOfRecords?: Resolver<Maybe<Array<Maybe<ResolversTypes['stat']>>>, ParentType, ContextType>;
   TableIsEmpty?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<QueryTableIsEmptyArgs, 'tablename'>>;
   getLatestModifiedRequest?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>;
   getLatestRequest?: Resolver<Maybe<Array<Maybe<ResolversTypes['LatestRequestInfo']>>>, ParentType, ContextType>;
@@ -387,6 +421,12 @@ export type AspnetuserResolvers<ContextType = any, ParentType extends ResolversP
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type StatResolvers<ContextType = any, ParentType extends ResolversParentTypes['stat'] = ResolversParentTypes['stat']> = {
+  count?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  tablename?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type Resolvers<ContextType = any> = {
   Date?: GraphQLScalarType;
   LatestRequestInfo?: LatestRequestInfoResolvers<ContextType>;
@@ -395,6 +435,7 @@ export type Resolvers<ContextType = any> = {
   Query?: QueryResolvers<ContextType>;
   Request?: RequestResolvers<ContextType>;
   aspnetuser?: AspnetuserResolvers<ContextType>;
+  stat?: StatResolvers<ContextType>;
 };
 
 export type DirectiveResolvers<ContextType = any> = {

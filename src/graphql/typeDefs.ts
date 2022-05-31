@@ -22,6 +22,7 @@ export const typeDefs = gql`
   enum DbTables {
     aspnetusers
     requests
+    addresses
   }
   type aspnetuser {
     Id: String
@@ -115,6 +116,25 @@ export const typeDefs = gql`
     accessfailedcount: Int
     sync_status: Int
   }
+  input AddressInput {
+    id: Int!
+    description: String
+    districtid: Int
+    userprofileid: Int
+    property_number: String
+    floor_number: Int
+    apartment_number: Int
+    streetname: String
+    unique_mark: String
+    districtId: Int
+    requestid: Int
+    addeddate: Date
+    modifieddate: Date
+    createdby: String
+    updatedby: String
+    regionid: Int
+    sync_status: Int
+  }
   type LatestUserInfo {
     addeddate: Date
     id: String
@@ -123,19 +143,25 @@ export const typeDefs = gql`
     addeddate: Date
     id: Int
   }
+  type stat {
+    tablename: String
+    count: Int
+  }
   type Query {
     getRequests: String!
     TableIsEmpty(tablename: DbTables!): Boolean!
-    GetNumberOfRecords(tablename: DbTables!): Int!
+    GetNumberOfRecords: [stat]
     getlatestUser: [LatestUserInfo]
     getlatestModifiedUser: Date
     getLatestRequest: [LatestRequestInfo]
     getLatestModifiedRequest: Date
   }
   type Mutation {
+    unsafe: String!
     initRequests(requests: [ReqInput!]): String!
     getRequestesByDate(date: Date): [Request]
     initUsers(users: [UserInput!]): String!
     SyncRequests(requests: ReqInput): String!
+    initAddresses(addresses: [AddressInput!]): String!
   }
 `;
