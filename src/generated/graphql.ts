@@ -39,7 +39,10 @@ export type AddressInput = {
 export enum DbTables {
   Addresses = 'addresses',
   Aspnetusers = 'aspnetusers',
-  Requests = 'requests'
+  Paymenttrasnsactions = 'paymenttrasnsactions',
+  Requests = 'requests',
+  Shippingorders = 'shippingorders',
+  Userprofiles = 'userprofiles'
 }
 
 export type LatestRequestInfo = {
@@ -148,6 +151,7 @@ export type QueryTableIsEmptyArgs = {
 export type ReqInput = {
   addeddate?: InputMaybe<Scalars['Date']>;
   area?: InputMaybe<Scalars['Float']>;
+  areatype?: InputMaybe<Scalars['Int']>;
   createdby?: InputMaybe<Scalars['String']>;
   id: Scalars['Int'];
   location?: InputMaybe<Scalars['String']>;
@@ -164,6 +168,7 @@ export type Request = {
   __typename?: 'Request';
   addeddate?: Maybe<Scalars['Date']>;
   area?: Maybe<Scalars['Float']>;
+  areatype?: Maybe<Scalars['Int']>;
   assigned?: Maybe<Scalars['Int']>;
   callcenter?: Maybe<Scalars['Int']>;
   callcenter_note?: Maybe<Scalars['String']>;
@@ -461,6 +466,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
 export type RequestResolvers<ContextType = any, ParentType extends ResolversParentTypes['Request'] = ResolversParentTypes['Request']> = {
   addeddate?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>;
   area?: Resolver<Maybe<ResolversTypes['Float']>, ParentType, ContextType>;
+  areatype?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   assigned?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   callcenter?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   callcenter_note?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;

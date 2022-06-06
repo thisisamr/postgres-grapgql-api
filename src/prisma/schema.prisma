@@ -19,6 +19,13 @@ model RequestPrices {
   UpdatedBy    String?
 }
 
+model EFMigrationsHistory {
+  MigrationId    String @id(map: "PK___EFMigrationsHistory") @db.VarChar(150)
+  ProductVersion String @db.VarChar(32)
+
+  @@map("__EFMigrationsHistory")
+}
+
 model addresses {
   id               Int       @id(map: "PK_Addresses")
   floor_number     Int?
@@ -35,6 +42,13 @@ model addresses {
   regionid         Int?
   sync_status      Int?
   property_number  String?   @db.VarChar
+}
+
+model aspnetroles {
+  Id               String  @id(map: "PK_AspNetRoles")
+  Name             String? @db.VarChar(256)
+  NormalizedName   String? @db.VarChar(256)
+  ConcurrencyStamp String?
 }
 
 model aspnetusers {
@@ -379,6 +393,7 @@ model requests {
   notes            String?
   sync_status      Int?
   id               Int       @id(map: "requests2_pkey")
+  areatype         Int?
 }
 
 model requeststatus {
@@ -426,6 +441,13 @@ model spatial_ref_sys {
   auth_srid Int?
   srtext    String? @db.VarChar(2048)
   proj4text String? @db.VarChar(2048)
+}
+
+model survey_review_comments {
+  id            Int       @id @default(autoincrement())
+  comment       String?
+  comment_time  DateTime? @db.Timestamp(6)
+  requestnumber String?   @db.VarChar
 }
 
 model surveyteam_comments {
@@ -480,25 +502,4 @@ model userprofiles {
   description     String?   @db.VarChar
   sync_status     Int?
   haswhatsapp     Boolean?
-}
-
-model EFMigrationsHistory {
-  MigrationId    String @id(map: "PK___EFMigrationsHistory") @db.VarChar(150)
-  ProductVersion String @db.VarChar(32)
-
-  @@map("__EFMigrationsHistory")
-}
-
-model aspnetroles {
-  Id               String  @id(map: "PK_AspNetRoles")
-  Name             String? @db.VarChar(256)
-  NormalizedName   String? @db.VarChar(256)
-  ConcurrencyStamp String?
-}
-
-model survey_review_comments {
-  id            Int       @id @default(autoincrement())
-  comment       String?
-  comment_time  DateTime? @db.Timestamp(6)
-  requestnumber String?   @db.VarChar
 }

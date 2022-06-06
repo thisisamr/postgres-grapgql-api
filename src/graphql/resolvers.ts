@@ -279,8 +279,9 @@ export const resolvers: Resolvers<Icontext> = {
         await prisma.aspnetusers.createMany({
           data: [...users],
         });
+        return "✔️ done adding Users";
       }
-      return "✔️ done adding Users";
+      return "Empty user list provided or null";
     },
     initAddresses: async (_, { addresses }, { prisma }) => {
       if (addresses?.length) {

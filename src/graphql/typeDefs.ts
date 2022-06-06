@@ -58,6 +58,7 @@ export const typeDefs = gql`
     requeststatus: Int
     location: String
     area: Float
+    areatype: Int
     price: Float
     receiptimagepath: String
     requestnumber: String
@@ -86,6 +87,7 @@ export const typeDefs = gql`
     requeststatus: Int
     location: String
     area: Float
+    areatype: Int
     price: Float
     requestnumber: String
     userid: String
