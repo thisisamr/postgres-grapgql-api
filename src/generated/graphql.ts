@@ -45,22 +45,8 @@ export enum DbTables {
   Userprofiles = 'userprofiles'
 }
 
-export type LatestRequestInfo = {
-  __typename?: 'LatestRequestInfo';
-  addeddate?: Maybe<Scalars['Date']>;
-  id?: Maybe<Scalars['Int']>;
-};
-
-export type LatestUserInfo = {
-  __typename?: 'LatestUserInfo';
-  addeddate?: Maybe<Scalars['Date']>;
-  id?: Maybe<Scalars['String']>;
-};
-
 export type Mutation = {
   __typename?: 'Mutation';
-  SyncRequests: Scalars['String'];
-  getRequestesByDate?: Maybe<Array<Maybe<Request>>>;
   initAddresses: Scalars['String'];
   initPaymentTransactions: Scalars['String'];
   initRequests: Scalars['String'];
@@ -68,16 +54,6 @@ export type Mutation = {
   initUserProfiles: Scalars['String'];
   initUsers: Scalars['String'];
   unsafe: Scalars['String'];
-};
-
-
-export type MutationSyncRequestsArgs = {
-  requests?: InputMaybe<ReqInput>;
-};
-
-
-export type MutationGetRequestesByDateArgs = {
-  date?: InputMaybe<Scalars['Date']>;
 };
 
 
@@ -136,11 +112,7 @@ export type Query = {
   __typename?: 'Query';
   GetNumberOfRecords?: Maybe<Array<Maybe<Stat>>>;
   TableIsEmpty: Scalars['Boolean'];
-  getLatestModifiedRequest?: Maybe<Scalars['Date']>;
-  getLatestRequest?: Maybe<Array<Maybe<LatestRequestInfo>>>;
   getRequests: Scalars['String'];
-  getlatestModifiedUser?: Maybe<Scalars['Date']>;
-  getlatestUser?: Maybe<Array<Maybe<LatestUserInfo>>>;
 };
 
 
@@ -369,8 +341,6 @@ export type ResolversTypes = {
   DbTables: DbTables;
   Float: ResolverTypeWrapper<Scalars['Float']>;
   Int: ResolverTypeWrapper<Scalars['Int']>;
-  LatestRequestInfo: ResolverTypeWrapper<LatestRequestInfo>;
-  LatestUserInfo: ResolverTypeWrapper<LatestUserInfo>;
   Mutation: ResolverTypeWrapper<{}>;
   PaymentTransactionInput: PaymentTransactionInput;
   Query: ResolverTypeWrapper<{}>;
@@ -391,8 +361,6 @@ export type ResolversParentTypes = {
   Date: Scalars['Date'];
   Float: Scalars['Float'];
   Int: Scalars['Int'];
-  LatestRequestInfo: LatestRequestInfo;
-  LatestUserInfo: LatestUserInfo;
   Mutation: {};
   PaymentTransactionInput: PaymentTransactionInput;
   Query: {};
@@ -429,21 +397,7 @@ export interface DateScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes
   name: 'Date';
 }
 
-export type LatestRequestInfoResolvers<ContextType = any, ParentType extends ResolversParentTypes['LatestRequestInfo'] = ResolversParentTypes['LatestRequestInfo']> = {
-  addeddate?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>;
-  id?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type LatestUserInfoResolvers<ContextType = any, ParentType extends ResolversParentTypes['LatestUserInfo'] = ResolversParentTypes['LatestUserInfo']> = {
-  addeddate?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>;
-  id?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
-  SyncRequests?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationSyncRequestsArgs, never>>;
-  getRequestesByDate?: Resolver<Maybe<Array<Maybe<ResolversTypes['Request']>>>, ParentType, ContextType, RequireFields<MutationGetRequestesByDateArgs, never>>;
   initAddresses?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationInitAddressesArgs, never>>;
   initPaymentTransactions?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationInitPaymentTransactionsArgs, never>>;
   initRequests?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationInitRequestsArgs, never>>;
@@ -456,11 +410,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   GetNumberOfRecords?: Resolver<Maybe<Array<Maybe<ResolversTypes['stat']>>>, ParentType, ContextType>;
   TableIsEmpty?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<QueryTableIsEmptyArgs, 'tablename'>>;
-  getLatestModifiedRequest?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>;
-  getLatestRequest?: Resolver<Maybe<Array<Maybe<ResolversTypes['LatestRequestInfo']>>>, ParentType, ContextType>;
   getRequests?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  getlatestModifiedUser?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>;
-  getlatestUser?: Resolver<Maybe<Array<Maybe<ResolversTypes['LatestUserInfo']>>>, ParentType, ContextType>;
 };
 
 export type RequestResolvers<ContextType = any, ParentType extends ResolversParentTypes['Request'] = ResolversParentTypes['Request']> = {
@@ -527,8 +477,6 @@ export type StatResolvers<ContextType = any, ParentType extends ResolversParentT
 
 export type Resolvers<ContextType = any> = {
   Date?: GraphQLScalarType;
-  LatestRequestInfo?: LatestRequestInfoResolvers<ContextType>;
-  LatestUserInfo?: LatestUserInfoResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   Request?: RequestResolvers<ContextType>;

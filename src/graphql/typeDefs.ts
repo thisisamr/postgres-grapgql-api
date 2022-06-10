@@ -140,14 +140,6 @@ export const typeDefs = gql`
     regionid: Int
     sync_status: Int
   }
-  type LatestUserInfo {
-    addeddate: Date
-    id: String
-  }
-  type LatestRequestInfo {
-    addeddate: Date
-    id: Int
-  }
   type stat {
     tablename: String
     count: Int
@@ -214,20 +206,15 @@ export const typeDefs = gql`
     shippingcenter_adress: String
   }
   type Query {
+    rualive: Boolean!
     getRequests: String!
     TableIsEmpty(tablename: DbTables!): Boolean!
     GetNumberOfRecords: [stat]
-    getlatestUser: [LatestUserInfo]
-    getlatestModifiedUser: Date
-    getLatestRequest: [LatestRequestInfo]
-    getLatestModifiedRequest: Date
   }
   type Mutation {
     unsafe: String!
     initRequests(requests: [ReqInput!]): String!
-    getRequestesByDate(date: Date): [Request]
     initUsers(users: [UserInput!]): String!
-    SyncRequests(requests: ReqInput): String!
     initAddresses(addresses: [AddressInput!]): String!
     initUserProfiles(userProfiles: [UserProfileInput!]): String!
     initPaymentTransactions(
