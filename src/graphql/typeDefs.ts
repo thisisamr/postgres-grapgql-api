@@ -26,59 +26,7 @@ export const typeDefs = gql`
     userprofiles
     shippingorders
     paymenttrasnsactions
-  }
-  type aspnetuser {
-    Id: String
-    ArabicFullName: String
-    addeddate: Date
-    modifieddate: Date
-    makerid: String
-    dateofbirth: Date
-    firstlogin: Boolean
-    addressid: Int
-    username: String
-    normalizedusername: String
-    email: String
-    normalizedemail: String
-    emailconfirmed: Boolean
-    passwordhash: String
-    securitystamp: String
-    concurrencystamp: String
-    phonenumber: String
-    phonenumberconfirmed: Boolean
-    twofactorenabled: Boolean
-    lockoutendl: Date
-    lockoutenabled: Boolean
-    accessfailedcount: Int
-    sync_status: Int
-  }
-
-  type Request {
-    unittype: Int
-    requeststatus: Int
-    location: String
-    area: Float
-    areatype: Int
-    price: Float
-    receiptimagepath: String
-    requestnumber: String
-    userid: String
-    addeddate: Date
-    modifieddate: Date
-    createdby: String
-    updatedby: String
-    callcenter_note: String
-    currentstatus: Int
-    payment_confirm: Int
-    callconfirm: Int
-    callcenter: Int
-    test: String
-    done: Int
-    assigned: Int
-    confirmed: Int
-    notes: String
-    sync_status: Int
-    id: Int
+    useraddresses
   }
 
   input ReqInput {
@@ -95,6 +43,8 @@ export const typeDefs = gql`
     modifieddate: Date
     createdby: String
     updatedby: String
+    subunittype: Int
+    subunittypearea: Float
   }
   input UserInput {
     id: String!
@@ -205,6 +155,18 @@ export const typeDefs = gql`
     shippingtype_name: String
     shippingcenter_adress: String
   }
+  input UserAddressesInput {
+    id: Int
+    description: String
+    districtid: Int
+    userprofileid: Int
+    addeddate: Date
+    modifieddate: Date
+    createdby: String
+    updatedby: String
+    regionid: Int
+  }
+
   type Query {
     rualive: Boolean!
     getRequests: String!
@@ -221,5 +183,6 @@ export const typeDefs = gql`
       paymentTransactions: [PaymentTransactionInput!]
     ): String!
     initShippingOrders(ShippingOrders: [ShippingOrderInput!]): String!
+    initUserAddresses(UserAddresses: [UserAddressesInput!]): String!
   }
 `;

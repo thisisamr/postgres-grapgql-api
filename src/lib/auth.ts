@@ -1,20 +1,26 @@
-import { User } from "@prisma/client";
-import jwt from "jsonwebtoken";
+// import { User } from "@prisma/client";
+import * as jose from "jose";
 
-export const createToken = (user: User) =>
-  jwt.sign({ ...user }, `${process.env.TOKEN_SECRET}`);
+// export const createToken = (user: User) =>
+//   jwt.sign({ ...user }, `${process.env.TOKEN_SECRET}`);
 
-export const getUserFromToken = (token: string) => {
+export const getUserFromToken = async (token: string) => {
   try {
-    const user = jwt.verify(token, `${process.env.TOKEN_SECRET}`);
-    // const check = await prisma.user.findUnique({ where: { id: user.id } });
-    // if (!check) {
-    //   throw new Error("Not a real user");
-    // }
+    const key = new TextEncoder().encode(process.env.TOKENSECRET);
+    const { payload } = await jose.jwtVerify(token, key);
+    const user = {
+      id: payload.id,
+      createdAt: payload.createdAt,
+      updatedAt: payload.updatedAt,
+      email: payload.email,
+      firstname: payload.firstname,
+      lastname: payload.lastname,
+      avatar: payload.avatar,
+    };
     return user;
-    // return models.User.findOne({ id: user.id });
-  } catch (e) {
-    console.log(e);
-    return e;
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error(error);
+    return null;
   }
 };

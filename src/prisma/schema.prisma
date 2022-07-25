@@ -27,7 +27,7 @@ model EFMigrationsHistory {
 }
 
 model addresses {
-  id               Int       @id(map: "PK_Addresses")
+  id               Int       @id(map: "PK_Addresses") @unique(map: "addresses_index")
   floor_number     Int?
   apartment_number Int?
   streetname       String?
@@ -52,7 +52,7 @@ model aspnetroles {
 }
 
 model aspnetusers {
-  id                   String    @id(map: "PK_AspNetUsers")
+  id                   String    @id(map: "PK_AspNetUsers") @unique(map: "aspnetusers_index")
   arabicfullname       String    @db.VarChar(200)
   addeddate            DateTime  @db.Timestamptz(6)
   modifieddate         DateTime? @db.Timestamptz(6)
@@ -82,7 +82,7 @@ model aspnetusers {
 }
 
 model assignements {
-  id                      Int       @id @default(autoincrement())
+  id                      Int       @id @unique(map: "assignements_index") @default(autoincrement())
   request_id              Int?
   survey_team_id          Int?
   assignment_date_time    DateTime? @db.Timestamptz(6)
@@ -100,6 +100,14 @@ model assignements {
   log_time                DateTime? @db.Timestamptz(6)
   log_proc                String?
   survey_review           Int?
+  cert                    Int?
+  tofedex                 DateTime? @db.Date
+  cret_recieved_msd       DateTime? @db.Date
+  tocitizen               DateTime? @db.Date
+  deliveryaddress         String?   @db.VarChar
+  difference              Float?
+  survey_review_msd       Int?
+  field_area              Decimal?  @db.Decimal
 }
 
 model callcenter {
@@ -117,7 +125,7 @@ model callcenter_comments {
 }
 
 model companies {
-  id                Int     @id(map: "PK_Companies") @default(autoincrement())
+  id                Int     @id(map: "PK_Companies") @unique(map: "companies_index") @default(autoincrement())
   companyname       String
   phonenumber       String
   email             String
@@ -128,6 +136,7 @@ model companies {
   pm_name           String?
   user_id           String? @db.Uuid
   address           String?
+  com_type          Int?
 }
 
 model company_gov {
@@ -198,45 +207,54 @@ model field_data {
 }
 
 model field_data_v2 {
-  geom                          Unsupported("geometry")?
-  survey_date                   String?                  @db.VarChar
-  apartment_no                  Int?
-  level_no                      Int?
-  north_border_name             String?                  @db.VarChar
-  south_border_name             String?                  @db.VarChar
-  east_border_name              String?                  @db.VarChar
-  west_border_name              String?                  @db.VarChar
-  attach_name                   String?                  @db.VarChar
-  north_border_length           Decimal?                 @db.Decimal
-  south_border_length           Decimal?                 @db.Decimal
-  east_border_length            Decimal?                 @db.Decimal
-  west_border_length            Decimal?                 @db.Decimal
-  description                   String?
-  usage                         String?
-  geom_build                    Unsupported("geometry")?
-  attach_selim_manwar_name      String?                  @db.VarChar
-  attach_land_name              String?                  @db.VarChar
-  attach_ma7dar_name            String?                  @db.VarChar
-  total_area_building           Decimal?                 @db.Decimal
-  area_buildings                Decimal?                 @db.Decimal
-  area_mnawer                   Decimal?                 @db.Decimal
-  area_ber_elselm               Decimal?                 @db.Decimal
-  area_apartment                Decimal?                 @db.Decimal
-  area_land                     Decimal?                 @db.Decimal
-  ket3a_no                      String?                  @db.VarChar
-  hod_no                        String?                  @db.VarChar
-  requestnumber                 String                   @id @db.VarChar
-  field_data_id                 Int                      @unique(map: "field_data_id") @default(autoincrement())
-  survey_time                   DateTime?                @db.Timestamptz(6)
-  elevator                      Int?
-  north_border_name_apartment   String?                  @db.VarChar
-  south_border_name_apartment   String?                  @db.VarChar
-  east_border_name_apartment    String?                  @db.VarChar
-  west_border_name_apartment    String?                  @db.VarChar
-  north_border_length_apartment Decimal?                 @db.Decimal
-  south_border_length_apartment Decimal?                 @db.Decimal
-  east_border_length_apartment  Decimal?                 @db.Decimal
-  west_border_length_apartment  Decimal?                 @db.Decimal
+  survey_date                    String?                  @db.VarChar
+  apartment_no                   Int?
+  level_no                       Int?
+  north_border_name              String?                  @db.VarChar
+  south_border_name              String?                  @db.VarChar
+  east_border_name               String?                  @db.VarChar
+  west_border_name               String?                  @db.VarChar
+  attach_name                    String?                  @db.VarChar
+  north_border_length            Decimal?                 @db.Decimal
+  south_border_length            Decimal?                 @db.Decimal
+  east_border_length             Decimal?                 @db.Decimal
+  west_border_length             Decimal?                 @db.Decimal
+  description                    String?
+  usage                          String?
+  geom_build                     Unsupported("geometry")?
+  attach_selim_manwar_name       String?                  @db.VarChar
+  attach_land_name               String?                  @db.VarChar
+  attach_ma7dar_name             String?                  @db.VarChar
+  total_area_building            Decimal?                 @db.Decimal
+  area_buildings                 Decimal?                 @db.Decimal
+  area_mnawer                    Decimal?                 @db.Decimal
+  area_ber_elselm                Decimal?                 @db.Decimal
+  area_apartment                 Decimal?                 @db.Decimal
+  area_land                      Decimal?                 @db.Decimal
+  ket3a_no                       String?                  @db.VarChar
+  hod_no                         String?                  @db.VarChar
+  requestnumber                  String                   @id @unique(map: "field_data_v2_index") @db.VarChar
+  field_data_id                  Int                      @unique(map: "field_data_id") @default(autoincrement())
+  survey_time                    DateTime?                @db.Timestamptz(6)
+  elevator                       Int?
+  north_border_name_apartment    String?                  @db.VarChar
+  south_border_name_apartment    String?                  @db.VarChar
+  east_border_name_apartment     String?                  @db.VarChar
+  west_border_name_apartment     String?                  @db.VarChar
+  north_border_length_apartment  Decimal?                 @db.Decimal
+  south_border_length_apartment  Decimal?                 @db.Decimal
+  east_border_length_apartment   Decimal?                 @db.Decimal
+  west_border_length_apartment   Decimal?                 @db.Decimal
+  seq                            BigInt                   @default(autoincrement())
+  elevator_area                  Decimal?                 @db.Decimal
+  corridor_area                  Decimal?                 @db.Decimal
+  attach_3aqd                    String?                  @db.VarChar
+  attach_layout                  String?                  @db.VarChar
+  north_border_length_apartment2 Decimal?                 @db.Decimal
+  south_border_length_apartment2 Decimal?                 @db.Decimal
+  east_border_length_apartment2  Decimal?                 @db.Decimal
+  west_border_length_apartment2  Decimal?                 @db.Decimal
+  area_apartment2                Decimal?                 @db.Decimal
 }
 
 model field_data_v3 {
@@ -282,7 +300,7 @@ model gov_3857 {
 }
 
 model governorates {
-  id           Int     @id(map: "PK_Governorates")
+  id           Int     @id(map: "PK_Governorates") @unique(map: "governorates_index")
   englishname  String? @db.VarChar(200)
   arabicname   String? @db.VarChar(200)
   createdby    String?
@@ -294,7 +312,7 @@ model governorates {
 }
 
 model office {
-  id             Int     @id @default(autoincrement())
+  id             Int     @id @unique(map: "office_index") @default(autoincrement())
   longitude      String? @db.VarChar
   latitude       String? @db.VarChar
   arabicaddress  String? @db.VarChar
@@ -375,7 +393,7 @@ model requests {
   area             Float?
   price            Float?
   receiptimagepath String?
-  requestnumber    String?
+  requestnumber    String    @unique(map: "requests_index")
   userid           String?
   addeddate        DateTime? @db.Timestamptz(6)
   modifieddate     DateTime? @db.Timestamptz(6)
@@ -394,6 +412,8 @@ model requests {
   sync_status      Int?
   id               Int       @id(map: "requests2_pkey")
   areatype         Int?
+  subunittype      Int?
+  subunittypearea  Float?
 }
 
 model requeststatus {
@@ -402,7 +422,7 @@ model requeststatus {
 }
 
 model shippingorders {
-  id                    Int       @id
+  id                    Int       @id @unique(map: "shippingorders_index")
   requestid             Int?
   shippingtype          Int?
   shippingprice         Float?
@@ -410,7 +430,7 @@ model shippingorders {
   longitude             Float?
   latitude              Float?
   districtid            Int?
-  status                Int?
+  shippingorderstatus   Int?
   addeddate             DateTime? @db.Timestamptz(6)
   modifieddate          DateTime? @db.Timestamptz(6)
   createdby             String?   @db.VarChar
@@ -478,7 +498,7 @@ model unittype_value {
 }
 
 model useraddresses {
-  id            Int       @id
+  id            Int       @id @unique(map: "useraddresses_index")
   description   String?   @db.VarChar(200)
   districtid    Int?
   userprofileid Int?
@@ -491,15 +511,120 @@ model useraddresses {
 }
 
 model userprofiles {
-  id              Int       @id
+  id              Int       @id @unique(map: "userprofiles_index")
   telephonenumber String?   @db.VarChar
   userid          String?
   addeddate       DateTime? @db.Timestamp(6)
   modifieddate    DateTime? @db.Timestamp(6)
   createdby       String?   @db.VarChar
   updatedby       String?   @db.VarChar
+  haswhatsapp     Boolean?
   phonenumbertype Int?
   description     String?   @db.VarChar
   sync_status     Int?
-  haswhatsapp     Boolean?
+}
+
+model areatype {
+  id       Int?
+  areatype String @unique(map: "areatype_index") @db.VarChar
+}
+
+model callcenter_complaint {
+  id               Int       @id @default(autoincrement())
+  complaint        String?
+  complaint_time   DateTime? @db.Timestamp(6)
+  requestnumber    String?   @db.VarChar
+  complaint_type   Decimal?  @db.Decimal
+  complaint_status Decimal?  @db.Decimal
+}
+
+model complaint_lukup {
+  id        Int     @id @default(autoincrement())
+  complaint String?
+}
+
+model employees_tasks {
+  id            Int     @id @default(autoincrement())
+  employee_code String?
+  requestnumber String?
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
+model offa77 {
+  survey_date                    String?                  @db.VarChar
+  apartment_no                   Int?
+  level_no                       Int?
+  north_border_name              String?                  @db.VarChar
+  south_border_name              String?                  @db.VarChar
+  east_border_name               String?                  @db.VarChar
+  west_border_name               String?                  @db.VarChar
+  attach_name                    String?                  @db.VarChar
+  north_border_length            Decimal?                 @db.Decimal
+  south_border_length            Decimal?                 @db.Decimal
+  east_border_length             Decimal?                 @db.Decimal
+  west_border_length             Decimal?                 @db.Decimal
+  description                    String?
+  usage                          String?
+  geom_build                     Unsupported("geometry")?
+  attach_selim_manwar_name       String?                  @db.VarChar
+  attach_land_name               String?                  @db.VarChar
+  attach_ma7dar_name             String?                  @db.VarChar
+  total_area_building            Decimal?                 @db.Decimal
+  area_buildings                 Decimal?                 @db.Decimal
+  area_mnawer                    Decimal?                 @db.Decimal
+  area_ber_elselm                Decimal?                 @db.Decimal
+  area_apartment                 Decimal?                 @db.Decimal
+  area_land                      Decimal?                 @db.Decimal
+  ket3a_no                       String?                  @db.VarChar
+  hod_no                         String?                  @db.VarChar
+  requestnumber                  String?                  @db.VarChar
+  field_data_id                  Int?
+  survey_time                    DateTime?                @db.Timestamptz(6)
+  elevator                       Int?
+  north_border_name_apartment    String?                  @db.VarChar
+  south_border_name_apartment    String?                  @db.VarChar
+  east_border_name_apartment     String?                  @db.VarChar
+  west_border_name_apartment     String?                  @db.VarChar
+  north_border_length_apartment  Decimal?                 @db.Decimal
+  south_border_length_apartment  Decimal?                 @db.Decimal
+  east_border_length_apartment   Decimal?                 @db.Decimal
+  west_border_length_apartment   Decimal?                 @db.Decimal
+  seq                            BigInt?
+  elevator_area                  Decimal?                 @db.Decimal
+  corridor_area                  Decimal?                 @db.Decimal
+  attach_3aqd                    String?                  @db.VarChar
+  attach_layout                  String?                  @db.VarChar
+  north_border_length_apartment2 Decimal?                 @db.Decimal
+  south_border_length_apartment2 Decimal?                 @db.Decimal
+  east_border_length_apartment2  Decimal?                 @db.Decimal
+  west_border_length_apartment2  Decimal?                 @db.Decimal
+  area_apartment2                Decimal?                 @db.Decimal
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
+model subunittype {
+  subunittype            Int
+  subunittype_name       String @db.VarChar(30)
+  subunittype_arabicname String @db.VarChar(50)
+
+  @@ignore
+}
+
+model survey_review_msd_comments {
+  id            Int       @id @default(autoincrement())
+  comment       String?
+  comment_time  DateTime? @db.Timestamp(6)
+  requestnumber String?   @db.VarChar
+  sender        String?
+}
+
+model user_log {
+  id         Int       @id @default(autoincrement())
+  user_name  String?   @db.VarChar
+  app_name   String?   @db.VarChar
+  process    String?   @db.VarChar
+  time       DateTime? @db.Timestamptz(6)
+  process_id String?
 }

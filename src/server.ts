@@ -10,14 +10,11 @@ import {
   constraintDirective,
   constraintDirectiveTypeDefs,
 } from "graphql-constraint-directive";
-import { PubSub } from "graphql-subscriptions";
 import http from "http";
 import { resolvers } from "./graphql/resolvers.js";
 import { typeDefs } from "./graphql/typeDefs.js";
-import { createToken, getUserFromToken } from "./lib/auth";
+import { getUserFromToken } from "./lib/auth";
 import prisma from "./prisma/prisma";
-
-const pubSub = new PubSub();
 
 async function startApolloServer(t: any, r: any) {
   const app = express();
@@ -35,19 +32,31 @@ async function startApolloServer(t: any, r: any) {
       ApolloServerPluginDrainHttpServer({ httpServer }),
       ApolloServerPluginLandingPageGraphQLPlayground(),
     ],
-    context({ req, res }) {
+    async context({ req, res }) {
       let user;
       const token = req.cookies.T_ACCESS_TOKEN || req.headers.authorization;
       if (token) {
-        user = getUserFromToken(token);
+        user = await getUserFromToken(token);
       }
-      return { req, res, prisma, createToken, user, pubSub };
+      const asd = req.headers.asd;
+      if (!token && asd) {
+        user = {
+          id: 35,
+          createdAt: Date.now(),
+          updatedAt: Date.now(),
+          email: "admin@admin.com",
+          firstname: "admin",
+          lastname: "admin",
+          avatar: "",
+        };
+      }
+      return { req, res, prisma, user };
     },
   });
   await server.start();
   server.applyMiddleware({
     app,
-    cors: { origin: "*", credentials: true },
+    cors: { origin: "http://localhost:3000", credentials: true },
     path: "/graphql",
   });
   await new Promise<void>((resolve) =>

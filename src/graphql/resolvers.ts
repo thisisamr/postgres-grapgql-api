@@ -1,10 +1,11 @@
 import { PrismaClient } from "@prisma/client";
-import { Context } from "apollo-server-core";
+import { AuthenticationError, Context } from "apollo-server-core";
 import { IncomingMessage, OutgoingMessage } from "http";
 import { Resolvers } from "../generated/graphql";
+import { User } from "../types/types";
 export interface Icontext extends Context {
   prisma: PrismaClient;
-  user: { name: string; email: string };
+  user: User;
   res: OutgoingMessage;
   req: IncomingMessage;
   createToken: (user: { name: string; email: string }) => string;
@@ -16,7 +17,10 @@ export const resolvers: Resolvers<Icontext> = {
       const isempty = (await prisma[tb].count()) == 0;
       return isempty;
     },
-    GetNumberOfRecords: async (_, __, { prisma }) => {
+    GetNumberOfRecords: async (_, __, { prisma, user }) => {
+      if (!user) {
+        throw new AuthenticationError("no auth");
+      }
       const tablenames = [
         "addresses",
         "aspnetusers",
@@ -24,8 +28,8 @@ export const resolvers: Resolvers<Icontext> = {
         "requests",
         "shippingorders",
         "paymenttrasnsactions",
+        "useraddresses",
       ];
-      const stats = [];
       const s = tablenames.map(async (tbl) => {
         try {
           const count = await prisma[tbl].count();
@@ -36,7 +40,10 @@ export const resolvers: Resolvers<Icontext> = {
       });
       return s;
     },
-    rualive: async () => {
+    rualive: async (_, __, { user }) => {
+      if (!user) {
+        throw new AuthenticationError("no auth");
+      }
       return true;
     },
   },
@@ -96,18 +103,23 @@ export const resolvers: Resolvers<Icontext> = {
       }
       return "Empty user list provided or null";
     },
-    unsafe: async (_, __, { prisma }) => {
-      const tbls = [
-        "addresses",
-        "aspnetusers",
-        "userprofiles",
-        "requests",
-        "shippingorders",
-        "paymenttrasnsactions",
-      ];
+    initUserAddresses: async (_, { UserAddresses }, { prisma }) => {
+      if (UserAddresses?.length) {
+        await prisma.useraddresses.createMany({
+          data: [...UserAddresses],
+          // Skip 'Bobo'
+        });
+        return "😡 done adding UserAddresses";
+      }
+      return "Empty user list provided or null";
+    },
+    unsafe: async (_, __, { prisma, user }) => {
+      if (!user) {
+        throw new AuthenticationError("no auth");
+      }
       const tablenames = await prisma.$queryRaw<
         Array<{ tablename: string }>
-      >`SELECT tablename FROM pg_tables WHERE schemaname='public' and tablename in ('addresses','aspnetusers','userprofiles','requests','shippingorders','paymenttrasnsactions')`;
+      >`SELECT tablename FROM pg_tables WHERE schemaname='public' and tablename in ('addresses','aspnetusers','userprofiles','requests','shippingorders','paymenttrasnsactions','useraddresses')`;
       for (const { tablename } of tablenames) {
         try {
           await prisma.$executeRawUnsafe(

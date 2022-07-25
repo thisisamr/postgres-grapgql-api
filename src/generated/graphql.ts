@@ -42,6 +42,7 @@ export enum DbTables {
   Paymenttrasnsactions = 'paymenttrasnsactions',
   Requests = 'requests',
   Shippingorders = 'shippingorders',
+  Useraddresses = 'useraddresses',
   Userprofiles = 'userprofiles'
 }
 
@@ -51,6 +52,7 @@ export type Mutation = {
   initPaymentTransactions: Scalars['String'];
   initRequests: Scalars['String'];
   initShippingOrders: Scalars['String'];
+  initUserAddresses: Scalars['String'];
   initUserProfiles: Scalars['String'];
   initUsers: Scalars['String'];
   unsafe: Scalars['String'];
@@ -74,6 +76,11 @@ export type MutationInitRequestsArgs = {
 
 export type MutationInitShippingOrdersArgs = {
   ShippingOrders?: InputMaybe<Array<ShippingOrderInput>>;
+};
+
+
+export type MutationInitUserAddressesArgs = {
+  UserAddresses?: InputMaybe<Array<UserAddressesInput>>;
 };
 
 
@@ -113,6 +120,7 @@ export type Query = {
   GetNumberOfRecords?: Maybe<Array<Maybe<Stat>>>;
   TableIsEmpty: Scalars['Boolean'];
   getRequests: Scalars['String'];
+  rualive: Scalars['Boolean'];
 };
 
 
@@ -131,6 +139,8 @@ export type ReqInput = {
   price?: InputMaybe<Scalars['Float']>;
   requestnumber?: InputMaybe<Scalars['String']>;
   requeststatus?: InputMaybe<Scalars['Int']>;
+  subunittype?: InputMaybe<Scalars['Int']>;
+  subunittypearea?: InputMaybe<Scalars['Float']>;
   unittype?: InputMaybe<Scalars['Int']>;
   updatedby?: InputMaybe<Scalars['String']>;
   userid?: InputMaybe<Scalars['String']>;
@@ -191,6 +201,18 @@ export type ShippingOrderInput = {
   sync_status?: InputMaybe<Scalars['Int']>;
   uniquemark?: InputMaybe<Scalars['String']>;
   updatedby?: InputMaybe<Scalars['String']>;
+};
+
+export type UserAddressesInput = {
+  addeddate?: InputMaybe<Scalars['Date']>;
+  createdby?: InputMaybe<Scalars['String']>;
+  description?: InputMaybe<Scalars['String']>;
+  districtid?: InputMaybe<Scalars['Int']>;
+  id?: InputMaybe<Scalars['Int']>;
+  modifieddate?: InputMaybe<Scalars['Date']>;
+  regionid?: InputMaybe<Scalars['Int']>;
+  updatedby?: InputMaybe<Scalars['String']>;
+  userprofileid?: InputMaybe<Scalars['Int']>;
 };
 
 export type UserInput = {
@@ -348,6 +370,7 @@ export type ResolversTypes = {
   Request: ResolverTypeWrapper<Request>;
   ShippingOrderInput: ShippingOrderInput;
   String: ResolverTypeWrapper<Scalars['String']>;
+  UserAddressesInput: UserAddressesInput;
   UserInput: UserInput;
   UserProfileInput: UserProfileInput;
   aspnetuser: ResolverTypeWrapper<Aspnetuser>;
@@ -368,6 +391,7 @@ export type ResolversParentTypes = {
   Request: Request;
   ShippingOrderInput: ShippingOrderInput;
   String: Scalars['String'];
+  UserAddressesInput: UserAddressesInput;
   UserInput: UserInput;
   UserProfileInput: UserProfileInput;
   aspnetuser: Aspnetuser;
@@ -402,6 +426,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   initPaymentTransactions?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationInitPaymentTransactionsArgs, never>>;
   initRequests?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationInitRequestsArgs, never>>;
   initShippingOrders?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationInitShippingOrdersArgs, never>>;
+  initUserAddresses?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationInitUserAddressesArgs, never>>;
   initUserProfiles?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationInitUserProfilesArgs, never>>;
   initUsers?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationInitUsersArgs, never>>;
   unsafe?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -411,6 +436,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   GetNumberOfRecords?: Resolver<Maybe<Array<Maybe<ResolversTypes['stat']>>>, ParentType, ContextType>;
   TableIsEmpty?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<QueryTableIsEmptyArgs, 'tablename'>>;
   getRequests?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  rualive?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
 };
 
 export type RequestResolvers<ContextType = any, ParentType extends ResolversParentTypes['Request'] = ResolversParentTypes['Request']> = {

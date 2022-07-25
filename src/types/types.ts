@@ -1,4 +1,4 @@
-import { PrismaClient, User } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 import { Context } from "apollo-server-core";
 import { IncomingMessage, OutgoingMessage } from "http";
 
@@ -7,4 +7,14 @@ export interface Icontext extends Context {
   user: User;
   res: OutgoingMessage;
   req: IncomingMessage;
+}
+
+export interface User {
+  id: number;
+  createdAt: Date;
+  updatedAt: Date;
+  email: string;
+  firstname: string;
+  lastname: string;
+  avatar: string;
 }
